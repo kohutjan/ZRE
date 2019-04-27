@@ -1,4 +1,4 @@
-
+from number_model import NumberModel
 
 class NetModel(object):
     def __init__(self, numberModels, decisionState):
@@ -7,7 +7,10 @@ class NetModel(object):
         # Connect number models with decision state
         inputsStatesForDecisionState = []
         for numberModel in self.numberModels:
-            inputsStatesForDecisionState.append(numberModel.states[-1])
+            if type(numberModel) is NumberModel:
+                inputsStatesForDecisionState.append(numberModel.numberState)
+            else:
+                inputsStatesForDecisionState.append(numberModel.states[-1])
         self.decisionState.inputs = inputsStatesForDecisionState
         # Connect decision state with number models
         for numberModel in self.numberModels:

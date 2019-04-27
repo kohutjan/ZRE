@@ -10,6 +10,7 @@ from state import State
 from token import Token
 
 from number_model import NumberModel
+from pause_model import PauseModel
 from net_model import NetModel
 from number_state import NumberState
 from decision_state import DecisionState
@@ -50,7 +51,7 @@ def main():
         print("")
     print("")
 
-    netModel = NetModel(numberModels, DecisionState(Token(megaNegNumber)))
+    netModel = NetModel(numberModels, DecisionState(Token(0)))
 
 
     """
@@ -68,7 +69,9 @@ def main():
             break
         break
         """
-
+        
+    for n in netModel.decisionState.token.passedNumbers:
+        print(n)
 
 def GetNumberModels(zreDict, phonemesMapping):
     numberModels = []
@@ -89,6 +92,15 @@ def GetNumberModels(zreDict, phonemesMapping):
             # Add dummy number state
             numberModel.AddNumberState(NumberState(numberModel.name, previousState, Token(megaNegNumber)))
             numberModels.append(numberModel)
+    # Add pause model
+    pauseModel = PauseModel()
+    previousState = None
+    for subPhonemIndex in range(3):
+        stateName = "{}_{}".format("pau", subPhonemIndex)
+        likelihoodMatrixColIndex = phonemesMapping["pau"] * 3 + subPhonemIndex
+        previousState = State(stateName, previousState, Token(megaNegNumber), likelihoodMatrixColIndex)
+        pauseModel.AddState(previousState)
+    numberModels.append(pauseModel)
     return numberModels
 
 
