@@ -7,10 +7,11 @@ class NetModel(object):
         # Connect number models with decision state
         inputsStatesForDecisionState = []
         for numberModel in self.numberModels:
-            if type(numberModel) is NumberModel:
-                inputsStatesForDecisionState.append(numberModel.numberState)
-            else:
-                inputsStatesForDecisionState.append(numberModel.states[-1])
+            inputsStatesForDecisionState.append(numberModel.states[-1])
+            # if type(numberModel) is NumberModel:
+            #     inputsStatesForDecisionState.append(numberModel.numberState)
+            # else:
+                
         self.decisionState.inputs = inputsStatesForDecisionState
         # Connect decision state with number models
         for numberModel in self.numberModels:

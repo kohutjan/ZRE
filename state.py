@@ -29,4 +29,7 @@ class State(object):
 
     def UpdateToken(self):
         self.token = self.tmpToken
-        self.token.value += log(0.5) + self.likelihood
+        if "pau" in self.name:
+            self.token.value += log(0.68 - (self.likelihood / 2.0)) + self.likelihood
+        else:    
+            self.token.value += log(0.5) + self.likelihood

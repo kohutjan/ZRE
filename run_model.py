@@ -42,7 +42,7 @@ def main():
         print(phonem, index)
     print("")
 
-    numberModels = GetNumberModels(args.zre_dict, phonemesMapping)
+    numberModels, numberNames = GetNumberModels(args.zre_dict, phonemesMapping)
     print("NUMBER MODELS")
     for numberModel in numberModels:
         print(numberModel.name)
@@ -51,7 +51,7 @@ def main():
         print("")
     print("")
 
-    netModel = NetModel(numberModels, DecisionState(Token(0)))
+    netModel = NetModel(numberModels, DecisionState(Token(0), numberNames))
 
 
     """
@@ -75,6 +75,7 @@ def main():
 
 def GetNumberModels(zreDict, phonemesMapping):
     numberModels = []
+    numberNames = []
     with open(zreDict) as f:
         hmmModelsSpecificationLines = f.readlines()
         for hmmModelSpecification in hmmModelsSpecificationLines:
@@ -90,6 +91,7 @@ def GetNumberModels(zreDict, phonemesMapping):
                     previousState = State(stateName, previousState, Token(megaNegNumber), likelihoodMatrixColIndex)
                     numberModel.AddState(previousState)
             # Add dummy number state
+            numberNames.append(numberModel.name)
             numberModel.AddNumberState(NumberState(numberModel.name, previousState, Token(megaNegNumber)))
             numberModels.append(numberModel)
     # Add pause model
@@ -101,7 +103,8 @@ def GetNumberModels(zreDict, phonemesMapping):
         previousState = State(stateName, previousState, Token(megaNegNumber), likelihoodMatrixColIndex)
         pauseModel.AddState(previousState)
     numberModels.append(pauseModel)
-    return numberModels
+    numberNames.append(None)
+    return numberModels, numberNames
 
 
 def GetPhonemesMapping(phonemesFile):
