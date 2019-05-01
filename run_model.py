@@ -18,12 +18,21 @@ from decision_state import DecisionState
 megaNegNumber = -1000000000000
 
 def parseargs():
-    print( ' '.join(sys.argv))
     parser = argparse.ArgumentParser()
     parser.add_argument('--likelihood-matrix', type=str, required=True, help="Input likelihood matrix to recognize.")
     parser.add_argument('--phonemes', type=str, required=True, help="phonemes file.")
     parser.add_argument('--zre-dict', type=str, required=True, help="zre.dict file.")
+    parser.add_argument('--verbose', type=str, default=False,
+                        help="if true prints everythink, if not prints only results")
+
     args = parser.parse_args()
+
+    global verbose
+    verbose = args.verbose
+
+    if verbose:
+        print( ' '.join(sys.argv))
+
     return args
 
 
@@ -32,24 +41,33 @@ def main():
 
     args = parseargs()
     likelihoodMatrix = readhtk(args.likelihood_matrix)
-    print(likelihoodMatrix)
-    print(likelihoodMatrix.shape)
-    print(likelihoodMatrix[0].shape)
+    if verbose:
+        print(likelihoodMatrix)
+        print(likelihoodMatrix.shape)
+        print(likelihoodMatrix[0].shape)
 
     phonemesMapping = GetPhonemesMapping(args.phonemes)
-    print("PHONEMES MAPPING")
+    if verbose:
+        print("PHONEMES MAPPING")
     for phonem, index in phonemesMapping.items():
-        print(phonem, index)
-    print("")
+        if verbose:
+            print(phonem, index)
+    if verbose:
+        print("")
 
     numberModels, numberNames = GetNumberModels(args.zre_dict, phonemesMapping)
-    print("NUMBER MODELS")
+    if verbose:
+        print("NUMBER MODELS")
     for numberModel in numberModels:
-        print(numberModel.name)
+        if verbose:
+            print(numberModel.name)
         for state in numberModel.states:
-            print(state.name, state.token.value)
+            if verbose:
+                print(state.name, state.token.value)
+        if verbose:
+            print("")
+    if verbose:
         print("")
-    print("")
 
     netModel = NetModel(numberModels, DecisionState(Token(0), numberNames))
 
@@ -81,7 +99,8 @@ def GetNumberModels(zreDict, phonemesMapping):
         for hmmModelSpecification in hmmModelsSpecificationLines:
             numberModel = NumberModel(hmmModelSpecification.strip().split()[0])
             hmmModelSpecification = hmmModelSpecification.strip().split()[1:]
-            print(numberModel.name)
+            if verbose:
+                print(numberModel.name)
             previousState = None
             for phonem in hmmModelSpecification:
                 # Generate three sub states fo each phonem
