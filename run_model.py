@@ -22,7 +22,7 @@ def parseargs():
     parser.add_argument('--likelihood-matrix', type=str, required=True, help="Input likelihood matrix to recognize.")
     parser.add_argument('--phonemes', type=str, required=True, help="phonemes file.")
     parser.add_argument('--zre-dict', type=str, required=True, help="zre.dict file.")
-    parser.add_argument('--verbose', type=str, default=False,
+    parser.add_argument('--verbose', action="store_true", default=False,
                         help="if true prints everythink, if not prints only results")
 
     args = parser.parse_args()

@@ -23,7 +23,7 @@ class DecisionState(object):
             if inputState.token.value >= self.tmpToken.value:
                 self.tmpToken = inputState.GetTokenCopy()
                 if numberName is not None:
-                    self.tmpToken.AddPassedNumber(numberName + " " + str(self.iter))
+                    self.tmpToken.AddPassedNumber(numberName)
 
     def UpdateToken(self):
         self.token = self.tmpToken
